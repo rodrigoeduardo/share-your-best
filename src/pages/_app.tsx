@@ -4,12 +4,15 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from '../styles/theme';
 
 import { Provider as NextAuthProvider } from 'next-auth/client';
+import { SpotifyDataProvider } from '../contexts/SpotifyDataContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <NextAuthProvider session={pageProps.session}>
       <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
+        <SpotifyDataProvider>
+          <Component {...pageProps} />
+        </SpotifyDataProvider>
       </ChakraProvider>
     </NextAuthProvider>
   );
