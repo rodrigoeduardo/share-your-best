@@ -1,4 +1,4 @@
-export type spotifySession = {
+export type SpotifySession = {
   user: {
     id: string;
     name: string;
