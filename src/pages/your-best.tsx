@@ -1,13 +1,22 @@
-import { Button, SimpleGrid, Flex, Avatar, Text } from '@chakra-ui/react';
+import {
+  Button,
+  SimpleGrid,
+  Flex,
+  Avatar,
+  Text,
+  HStack,
+  Box,
+} from '@chakra-ui/react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession, signOut, useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import { FaSpotify } from 'react-icons/fa';
+import { TimeRangeButton } from '../components/TimeRangeButton';
 import { Waves } from '../components/Waves';
 import { useSpotifyData } from '../contexts/SpotifyDataContext';
 
 export default function yourBest() {
-  const { artistsData, tracksData } = useSpotifyData();
+  const { artistsData, tracksData, timeRange, setTimeRange } = useSpotifyData();
   const [session] = useSession();
 
   const router = useRouter();
@@ -17,6 +26,10 @@ export default function yourBest() {
     router.push('/');
   }
 
+  function handleTimeRangeChange(timeRange: string) {
+    setTimeRange(timeRange);
+  }
+
   return (
     <>
       <Waves />
@@ -24,6 +37,24 @@ export default function yourBest() {
       <Text fontSize="3rem" fontWeight="bold" textAlign="center" pt="4rem">
         best of {session?.user.name}
       </Text>
+
+      <HStack justifyContent="center">
+        <TimeRangeButton
+          changeTimeRange={() => handleTimeRangeChange('short_term')}
+          name="Last Month"
+          isActive={timeRange == 'short_term'}
+        />
+        <TimeRangeButton
+          changeTimeRange={() => handleTimeRangeChange('medium_term')}
+          name="Last 6 Months"
+          isActive={timeRange == 'medium_term'}
+        />
+        <TimeRangeButton
+          changeTimeRange={() => handleTimeRangeChange('long_term')}
+          name="All Time"
+          isActive={timeRange == 'long_term'}
+        />
+      </HStack>
 
       <SimpleGrid columns={5} spacing={10} pt="2rem">
         {artistsData?.items.map((artist) => {
@@ -56,16 +87,17 @@ export default function yourBest() {
       </SimpleGrid>
 
       {session && (
-        <Button
-          colorScheme="green"
-          leftIcon={<FaSpotify />}
-          w="fit-content"
-          alignSelf="center"
-          mt="2rem"
-          onClick={() => handleSignOut()}
-        >
-          Log out
-        </Button>
+        <Box align="center">
+          <Button
+            colorScheme="green"
+            leftIcon={<FaSpotify />}
+            w="fit-content"
+            mt="2rem"
+            onClick={() => handleSignOut()}
+          >
+            Log out
+          </Button>
+        </Box>
       )}
     </>
   );
