@@ -1,38 +1,45 @@
-import { Flex, Text, Button, SimpleGrid, Avatar } from '@chakra-ui/react';
-import { FaSpotify } from 'react-icons/fa';
+import { Flex, Text, Button, Image } from '@chakra-ui/react';
+import { FaSpotify, FaLongArrowAltRight } from 'react-icons/fa';
 
 import { useSession, signIn, getSession } from 'next-auth/client';
-import { useSpotifyData } from '../contexts/SpotifyDataContext';
 import { Logo } from '../components/Logo';
-import Router from 'next/router';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { Waves } from '../components/Waves';
 
 export default function Home() {
-  // const { data } = useSpotifyData();
   const [session] = useSession();
 
   return (
-    <Flex flexDir="column" maxW="1080px" margin="0 auto" pt="1rem">
-      <Logo />
+    <>
+      <Waves />
 
-      <Text fontSize="0.8rem" color="gray.200" textAlign="center">
-        Login in with Spotify and share your most listened artists, albums and
-        playlists.
-      </Text>
+      <Flex justifyContent="space-between" pt="5rem" maxW="1200px" m="0 auto">
+        <Flex flexDir="column" maxW="700px" justifyContent="center">
+          <Logo />
 
-      {!session && (
-        <Button
-          colorScheme="green"
-          leftIcon={<FaSpotify />}
-          w="fit-content"
-          alignSelf="center"
-          mt="2rem"
-          onClick={() => signIn('spotify')}
-        >
-          Log in with Spotify
-        </Button>
-      )}
-    </Flex>
+          <Text fontSize="2rem" color="gray.200">
+            Login in with Spotify and share your most listened artists, albums
+            and playlists.
+          </Text>
+
+          {!session && (
+            <Button
+              colorScheme="green"
+              leftIcon={<FaSpotify />}
+              rightIcon={<FaLongArrowAltRight />}
+              w="100%"
+              alignSelf="center"
+              mt="2rem"
+              onClick={() => signIn('spotify')}
+            >
+              Log in with Spotify
+            </Button>
+          )}
+        </Flex>
+
+        <Image src="assets/images/home-image.svg" boxSize="450px" />
+      </Flex>
+    </>
   );
 }
 
@@ -54,14 +61,3 @@ export const getServerSideProps: GetServerSideProps = async (
     props: {},
   };
 };
-
-// <SimpleGrid columns={5} spacing={10}>
-//   {data?.items.map((artist) => {
-//     return (
-//       <Flex key={artist.id} flexDir="column" align="center">
-//         <Avatar name={artist.name} src={artist.images[0].url} />
-//         <Text>{artist.name}</Text>
-//       </Flex>
-//     );
-//   })}
-// </SimpleGrid>
