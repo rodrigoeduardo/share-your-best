@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { SpotifyData } from '../models/SpotifyData';
+import { SpotifyArtistData, SpotifyTrackData } from '../models/SpotifyData';
 import { SpotifySession } from '../models/SpotifySession';
 import { api } from '../services/api';
 
@@ -15,35 +15,59 @@ interface SpotifyDataProviderProps {
 }
 
 interface SpotifyDataContextData {
-  data: SpotifyData | null;
+  artistsData: SpotifyArtistData | null;
+  tracksData: SpotifyTrackData | null;
 }
 
 const SpotifyDataContext = createContext({} as SpotifyDataContextData);
 
 export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
-  const [data, setData] = useState<SpotifyData>(null);
+  const [artistsData, setArtistsData] = useState<SpotifyArtistData>(null);
+  const [tracksData, setTracksData] = useState<SpotifyTrackData>(null);
+
   const [session] = useSession();
 
   useEffect(() => {
-    getArtists();
+    getTopArtists();
+    getTopTracks();
   }, [session]);
 
-  async function getArtists() {
+  async function getTopArtists() {
     if (!session) {
       return;
     }
 
     const spotifySession = session as SpotifySession;
 
-    const response = await api.get<SpotifyData>('/me/top/artists', {
+    const response = await api.get<SpotifyArtistData>('/me/top/artists', {
       headers: { Authorization: `Bearer ${spotifySession.user.accessToken}` },
+      params: {
+        limit: 5,
+      },
     });
 
-    setData(response.data);
+    setArtistsData(response.data);
+  }
+
+  async function getTopTracks() {
+    if (!session) {
+      return;
+    }
+
+    const spotifySession = session as SpotifySession;
+
+    const response = await api.get<SpotifyTrackData>('/me/top/tracks', {
+      headers: { Authorization: `Bearer ${spotifySession.user.accessToken}` },
+      params: {
+        limit: 5,
+      },
+    });
+
+    setTracksData(response.data);
   }
 
   return (
-    <SpotifyDataContext.Provider value={{ data }}>
+    <SpotifyDataContext.Provider value={{ artistsData, tracksData }}>
       {children}
     </SpotifyDataContext.Provider>
   );
