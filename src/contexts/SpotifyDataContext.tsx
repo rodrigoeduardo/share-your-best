@@ -8,7 +8,11 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { SpotifyArtistData, SpotifyTrackData } from '../models/SpotifyData';
+import {
+  SpotifyArtistData,
+  SpotifyPlaylistData,
+  SpotifyTrackData,
+} from '../models/SpotifyData';
 import { SpotifySession } from '../models/SpotifySession';
 import { api } from '../services/api';
 
@@ -19,6 +23,7 @@ interface SpotifyDataProviderProps {
 interface SpotifyDataContextData {
   artistsData: SpotifyArtistData | null;
   tracksData: SpotifyTrackData | null;
+  playlistsData: SpotifyPlaylistData | null;
   timeRange: 'short_term' | 'medium_term' | 'long_term';
   setTimeRange: Dispatch<SetStateAction<string>>;
 }
@@ -28,6 +33,7 @@ const SpotifyDataContext = createContext({} as SpotifyDataContextData);
 export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
   const [artistsData, setArtistsData] = useState<SpotifyArtistData>(null);
   const [tracksData, setTracksData] = useState<SpotifyTrackData>(null);
+  const [playlistsData, setPlaylistsData] = useState<SpotifyPlaylistData>(null);
   const [timeRange, setTimeRange] = useState<
     'short_term' | 'medium_term' | 'long_term'
   >('medium_term');
@@ -37,6 +43,7 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
   useEffect(() => {
     getTopArtists();
     getTopTracks();
+    // getPlaylists();
   }, [session, timeRange]);
 
   async function getTopArtists() {
@@ -75,9 +82,29 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
     setTracksData(response.data);
   }
 
+  async function getPlaylists() {
+    if (!session) {
+      return;
+    }
+
+    const spotifySession = session as SpotifySession;
+
+    const response = await api.get<SpotifyPlaylistData>('/me/playlists', {
+      headers: { Authorization: `Bearer ${spotifySession.user.accessToken}` },
+    });
+
+    setPlaylistsData(response.data);
+  }
+
   return (
     <SpotifyDataContext.Provider
-      value={{ artistsData, tracksData, timeRange, setTimeRange }}
+      value={{
+        artistsData,
+        tracksData,
+        playlistsData,
+        timeRange,
+        setTimeRange,
+      }}
     >
       {children}
     </SpotifyDataContext.Provider>

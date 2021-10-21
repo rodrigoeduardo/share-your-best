@@ -39,3 +39,18 @@ type TrackItem = {
 type TrackArtist = {
   name: string;
 };
+
+// PLAYLISTS
+
+export type SpotifyPlaylistData = {
+  items: PlaylistItem[];
+};
+
+type PlaylistItem = {
+  name: string;
+  id: string;
+  images: Image[];
+  external_urls: {
+    spotify: string;
+  };
+};
