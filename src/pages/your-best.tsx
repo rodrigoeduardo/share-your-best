@@ -1,25 +1,28 @@
-import {
-  Button,
-  SimpleGrid,
-  Flex,
-  Avatar,
-  Text,
-  HStack,
-  Box,
-} from '@chakra-ui/react';
+import { Button, Flex, Avatar, Text, HStack, Box } from '@chakra-ui/react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession, signOut, useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import { FaSpotify } from 'react-icons/fa';
+import { Logo } from '../components/Logo';
 import { TimeRangeButton } from '../components/TimeRangeButton';
 import { Waves } from '../components/Waves';
+import { MostListened } from '../components/YourBest/MostListened';
 import { useSpotifyData } from '../contexts/SpotifyDataContext';
+import { SpotifySession } from '../models/SpotifySession';
 
 export default function yourBest() {
-  const { artistsData, tracksData, timeRange, setTimeRange } = useSpotifyData();
+  const { timeRange, setTimeRange } = useSpotifyData();
+
   const [session] = useSession();
+  const spotifySession = session as SpotifySession;
 
   const router = useRouter();
+
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
 
   function handleSignOut() {
     signOut();
@@ -30,15 +33,21 @@ export default function yourBest() {
     setTimeRange(timeRange);
   }
 
+  function convertTimeRangeToReadableSentence(timeRange: string) {
+    if (timeRange == 'medium_term') {
+      return 'LAST 6 MONTHS';
+    } else if (timeRange == 'short_term') {
+      return 'LAST MONTH';
+    } else if (timeRange == 'long_term') {
+      return 'ALL TIME';
+    }
+  }
+
   return (
     <>
       <Waves />
 
-      <Text fontSize="3rem" fontWeight="bold" textAlign="center" pt="4rem">
-        best of {session?.user.name}
-      </Text>
-
-      <HStack justifyContent="center">
+      <HStack justifyContent="center" mt="1rem">
         <TimeRangeButton
           changeTimeRange={() => handleTimeRangeChange('short_term')}
           name="Last Month"
@@ -56,35 +65,52 @@ export default function yourBest() {
         />
       </HStack>
 
-      <SimpleGrid columns={5} spacing={10} pt="2rem">
-        {artistsData?.items.map((artist) => {
-          return (
-            <Flex key={artist.id} flexDir="column" align="center">
-              <Avatar
-                name={artist.name}
-                src={artist.images[0].url}
-                boxSize="200px"
-              />
-              <Text>{artist.name}</Text>
-            </Flex>
-          );
-        })}
-      </SimpleGrid>
+      <Flex
+        w="540px"
+        h="960px"
+        flexDir="column"
+        bgColor="black"
+        margin="1rem auto"
+        p="2rem"
+        align="center"
+        borderRadius="1rem"
+      >
+        <Flex flexDir="column" align="center">
+          <FaSpotify fontSize="3rem" color="#1ed760" />
+          <Logo fontSize="2rem" />
+        </Flex>
 
-      <SimpleGrid columns={5} spacing={10} mt="1rem">
-        {tracksData?.items.map((track) => {
-          return (
-            <Flex key={track.id} flexDir="column" align="center">
-              <Avatar
-                name={track.name}
-                src={track.album.images[0].url}
-                boxSize="200px"
-              />
-              <Text>{track.name}</Text>
-            </Flex>
-          );
-        })}
-      </SimpleGrid>
+        <Flex mt="1rem">
+          <Avatar
+            name={spotifySession?.user.name}
+            src={spotifySession?.user.picture}
+            boxSize="4rem"
+          />
+          <Text
+            fontSize="1.5rem"
+            fontWeight="medium"
+            lineHeight="1.8rem"
+            ml="1rem"
+          >
+            the best of
+            <Text color="green.600">{spotifySession?.user.name}</Text>
+          </Text>
+        </Flex>
+
+        <Text letterSpacing="0.5rem" mt="1rem">
+          {convertTimeRangeToReadableSentence(timeRange)}
+        </Text>
+
+        <Flex flexDir="column" mt="1rem" align="center">
+          <MostListened type="artists" />
+        </Flex>
+
+        <Flex flexDir="column" mt="2rem" align="center">
+          <MostListened type="songs" />
+        </Flex>
+
+        <Text mt="auto">📅 {currentDate}</Text>
+      </Flex>
 
       {session && (
         <Box align="center">
@@ -92,7 +118,7 @@ export default function yourBest() {
             colorScheme="green"
             leftIcon={<FaSpotify />}
             w="fit-content"
-            mt="2rem"
+            my="2rem"
             onClick={() => handleSignOut()}
           >
             Log out
