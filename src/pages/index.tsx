@@ -15,7 +15,7 @@ export default function Home() {
 
       <Flex justifyContent="space-between" pt="5rem" maxW="1200px" m="0 auto">
         <Flex flexDir="column" maxW="700px" justifyContent="center">
-          <Logo />
+          <Logo fontSize="6rem" />
 
           <Text fontSize="2rem" color="gray.200">
             Login in with Spotify and share your most listened artists, albums
