@@ -6,6 +6,8 @@ import { theme } from '../styles/theme';
 import { Provider as NextAuthProvider } from 'next-auth/client';
 import { SpotifyDataProvider } from '../contexts/SpotifyDataContext';
 
+import '../styles/waves.css';
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <NextAuthProvider session={pageProps.session}>
