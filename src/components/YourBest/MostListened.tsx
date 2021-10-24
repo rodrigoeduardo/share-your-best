@@ -14,7 +14,8 @@ export function MostListened({ type }: MostListenedProps) {
       <>
         <Text fontSize="1.5rem" fontWeight="bold">
           My most listened
-          <Text as="span" color="green.600" ml="0.5rem">
+          <Text as="span" color="green.600">
+            {' '}
             artists
           </Text>
         </Text>
@@ -57,7 +58,8 @@ export function MostListened({ type }: MostListenedProps) {
     <>
       <Text fontSize="1.5rem" fontWeight="bold">
         My most listened
-        <Text as="span" color="green.600" ml="0.5rem">
+        <Text as="span" color="green.600">
+          {' '}
           songs
         </Text>
       </Text>

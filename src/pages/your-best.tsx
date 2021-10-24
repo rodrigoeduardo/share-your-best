@@ -10,8 +10,19 @@ import { MostListened } from '../components/YourBest/MostListened';
 import { useSpotifyData } from '../contexts/SpotifyDataContext';
 import { SpotifySession } from '../models/SpotifySession';
 
+import MagicHover from 'magic-hover';
+
 export default function yourBest() {
   const { timeRange, setTimeRange } = useSpotifyData();
+
+  const options = {
+    max: 10,
+    reverse: true,
+    perspective: 1000,
+    scale: { x: 1, y: 1, z: 1 },
+    rotate: 0,
+    translate: { x: 0, y: 0 },
+  };
 
   const [session] = useSession();
   const spotifySession = session as SpotifySession;
@@ -65,52 +76,63 @@ export default function yourBest() {
         />
       </HStack>
 
-      <Flex
-        w="540px"
-        h="960px"
-        flexDir="column"
-        bgColor="black"
-        margin="1rem auto"
-        p="2rem"
-        align="center"
-        borderRadius="1rem"
-      >
-        <Flex flexDir="column" align="center">
-          <FaSpotify fontSize="3rem" color="#1ed760" />
-          <Logo fontSize="2rem" />
-        </Flex>
+      <MagicHover options={options}>
+        <Flex
+          w={{
+            base: '337.5px',
+            md: '405px',
+            xl: '540px',
+          }}
+          h={{
+            base: '600px',
+            md: '720px',
+            xl: '960px',
+          }}
+          flexDir="column"
+          bgColor="black"
+          margin="1rem auto"
+          p="2rem"
+          align="center"
+          borderRadius="1rem"
+          boxShadow="2xl"
+        >
+          <Flex flexDir="column" align="center">
+            <FaSpotify fontSize="3rem" color="#1ed760" />
+            <Logo fontSize="2rem" />
+          </Flex>
 
-        <Flex mt="1rem">
-          <Avatar
-            name={spotifySession?.user.name}
-            src={spotifySession?.user.picture}
-            boxSize="4rem"
-          />
-          <Text
-            fontSize="1.5rem"
-            fontWeight="medium"
-            lineHeight="1.8rem"
-            ml="1rem"
-          >
-            the best of
-            <Text color="green.600">{spotifySession?.user.name}</Text>
+          <Flex mt="1rem">
+            <Avatar
+              name={spotifySession?.user.name}
+              src={spotifySession?.user.picture}
+              boxSize="4rem"
+            />
+            <Text
+              fontSize="1.5rem"
+              fontWeight="medium"
+              lineHeight="1.8rem"
+              ml="1rem"
+            >
+              the best of
+              <Text color="green.600">{spotifySession?.user.name}</Text>
+            </Text>
+          </Flex>
+
+          <Text letterSpacing="0.5rem" mt="1rem">
+            {convertTimeRangeToReadableSentence(timeRange)}
           </Text>
+
+          <Flex flexDir="column" mt="1rem" align="center">
+            <MostListened type="artists" />
+          </Flex>
+
+          <Flex flexDir="column" mt="2rem" align="center">
+            <MostListened type="songs" />
+          </Flex>
+
+          <Text mt="auto">📅 {currentDate}</Text>
         </Flex>
-
-        <Text letterSpacing="0.5rem" mt="1rem">
-          {convertTimeRangeToReadableSentence(timeRange)}
-        </Text>
-
-        <Flex flexDir="column" mt="1rem" align="center">
-          <MostListened type="artists" />
-        </Flex>
-
-        <Flex flexDir="column" mt="2rem" align="center">
-          <MostListened type="songs" />
-        </Flex>
-
-        <Text mt="auto">📅 {currentDate}</Text>
-      </Flex>
+      </MagicHover>
 
       {session && (
         <Box align="center">
