@@ -55,17 +55,18 @@ Access [Spotify for Developers](https://developer.spotify.com/dashboard/).
 
 After logging in with your Spotify account, a "Create an app" button will be visible:
 
-<img src="./public/images/spotify-dashboard.png" />
+<img src="./public/assets/images/spotify-dashboard.png" />
 
 After clicking on it, create your app name and description and agree with Spotify's Developer Terms of Service and Branding Guidelines.
 Then, click on "Edit settings" and add to Redirect URIs the following URI:
+
 ```
 http://localhost:YOUR_PORT/api/auth/callback/spotify
 ```
 
 If you want to an specific account to be able to log in, you have to add it on "Users and Access" page.
 
-After that, go to your project and rename ```.env.example``` file to ```.env.local``` and fill the environmental variables with the keys in your [Spotify for Developers](https://developer.spotify.com/dashboard/) app dashboard.
+After that, go to your project and rename `.env.example` file to `.env.local` and fill the environmental variables with the keys in your [Spotify for Developers](https://developer.spotify.com/dashboard/) app dashboard.
 
 **And that's it, you are ready to use!**
 
