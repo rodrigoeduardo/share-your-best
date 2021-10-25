@@ -10,18 +10,15 @@ import { MostListened } from '../components/YourBest/MostListened';
 import { useSpotifyData } from '../contexts/SpotifyDataContext';
 import { SpotifySession } from '../models/SpotifySession';
 
-import MagicHover from 'magic-hover';
+import { Tilt } from '../components/YourBest/Tilt';
 
 export default function yourBest() {
   const { timeRange, setTimeRange } = useSpotifyData();
 
-  const options = {
-    max: 10,
+  const tiltOptions = {
     reverse: true,
-    perspective: 1000,
-    scale: { x: 1, y: 1, z: 1 },
-    rotate: 0,
-    translate: { x: 0, y: 0 },
+    speed: 1000,
+    max: 5,
   };
 
   const [session] = useSession();
@@ -58,26 +55,28 @@ export default function yourBest() {
     <>
       <Waves />
 
-      <HStack justifyContent="center" mt="1rem">
-        <TimeRangeButton
-          changeTimeRange={() => handleTimeRangeChange('short_term')}
-          name="Last Month"
-          isActive={timeRange == 'short_term'}
-        />
-        <TimeRangeButton
-          changeTimeRange={() => handleTimeRangeChange('medium_term')}
-          name="Last 6 Months"
-          isActive={timeRange == 'medium_term'}
-        />
-        <TimeRangeButton
-          changeTimeRange={() => handleTimeRangeChange('long_term')}
-          name="All Time"
-          isActive={timeRange == 'long_term'}
-        />
-      </HStack>
+      <Box align="center">
+        <HStack justifyContent="center" my="2rem">
+          <TimeRangeButton
+            changeTimeRange={() => handleTimeRangeChange('short_term')}
+            name="Last Month"
+            isActive={timeRange == 'short_term'}
+          />
+          <TimeRangeButton
+            changeTimeRange={() => handleTimeRangeChange('medium_term')}
+            name="Last 6 Months"
+            isActive={timeRange == 'medium_term'}
+          />
+          <TimeRangeButton
+            changeTimeRange={() => handleTimeRangeChange('long_term')}
+            name="All Time"
+            isActive={timeRange == 'long_term'}
+          />
+        </HStack>
 
-      <MagicHover options={options}>
-        <Flex
+        <Tilt
+          options={tiltOptions}
+          display="flex"
           w={{
             base: '337.5px',
             md: '405px',
@@ -90,9 +89,7 @@ export default function yourBest() {
           }}
           flexDir="column"
           bgColor="black"
-          margin="1rem auto"
           p="2rem"
-          align="center"
           borderRadius="1rem"
           boxShadow="2xl"
         >
@@ -101,13 +98,14 @@ export default function yourBest() {
             <Logo fontSize="2rem" />
           </Flex>
 
-          <Flex mt="1rem">
+          <Flex mt="1rem" marginX="auto">
             <Avatar
               name={spotifySession?.user.name}
               src={spotifySession?.user.picture}
               boxSize="4rem"
             />
             <Text
+              textAlign="left"
               fontSize="1.5rem"
               fontWeight="medium"
               lineHeight="1.8rem"
@@ -118,7 +116,7 @@ export default function yourBest() {
             </Text>
           </Flex>
 
-          <Text letterSpacing="0.5rem" mt="1rem">
+          <Text letterSpacing="0.5rem" mt="1rem" marginX="auto">
             {convertTimeRangeToReadableSentence(timeRange)}
           </Text>
 
@@ -130,23 +128,25 @@ export default function yourBest() {
             <MostListened type="songs" />
           </Flex>
 
-          <Text mt="auto">📅 {currentDate}</Text>
-        </Flex>
-      </MagicHover>
+          <Text mt="auto" marginX="auto">
+            📅 {currentDate}
+          </Text>
+        </Tilt>
 
-      {session && (
-        <Box align="center">
-          <Button
-            colorScheme="green"
-            leftIcon={<FaSpotify />}
-            w="fit-content"
-            my="2rem"
-            onClick={() => handleSignOut()}
-          >
-            Log out
-          </Button>
-        </Box>
-      )}
+        {session && (
+          <Box align="center">
+            <Button
+              colorScheme="green"
+              leftIcon={<FaSpotify />}
+              w="fit-content"
+              my="2rem"
+              onClick={() => handleSignOut()}
+            >
+              Log out
+            </Button>
+          </Box>
+        )}
+      </Box>
     </>
   );
 }
