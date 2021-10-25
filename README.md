@@ -55,7 +55,7 @@ Access [Spotify for Developers](https://developer.spotify.com/dashboard/).
 
 After logging in with your Spotify account, a "Create an app" button will be visible:
 
-// image
+<img src="./public/images/spotify-dashboard.png" />
 
 After clicking on it, create your app name and description and agree with Spotify's Developer Terms of Service and Branding Guidelines.
 Then, click on "Edit settings" and add to Redirect URIs the following URI:
