@@ -4,7 +4,7 @@
 
 <br />
 
-share your best! is an application built by [me](https://github.com/rodrigoeduardo/) which aims to authenticate an user and get their most listened songs, artists and playlists from Spotify! Then, it'll be able to share good music taste on Instagram, Twitter, Facebook and other social networks!
+share your best! is an application built by [me](https://github.com/rodrigoeduardo/) which aims to authenticate an user and get their most listened songs, artists and playlists from Spotify! Then, it'll be able to share good taste in music on Instagram, Twitter, Facebook and other social networks!
 
 ## 🚀 Built With
 
