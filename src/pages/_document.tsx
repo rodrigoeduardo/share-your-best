@@ -5,7 +5,6 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>share your best!</title>
           <link rel="shortcut icon" href="assets/icons/favicon.png" />
 
           <link rel="preconnect" href="https://fonts.googleapis.com" />

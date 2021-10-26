@@ -7,16 +7,22 @@ import { Provider as NextAuthProvider } from 'next-auth/client';
 import { SpotifyDataProvider } from '../contexts/SpotifyDataContext';
 
 import '../styles/waves.css';
+import Head from 'next/head';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <NextAuthProvider session={pageProps.session}>
-      <ChakraProvider theme={theme}>
-        <SpotifyDataProvider>
-          <Component {...pageProps} />
-        </SpotifyDataProvider>
-      </ChakraProvider>
-    </NextAuthProvider>
+    <>
+      <Head>
+        <title>share your best!</title>
+      </Head>
+      <NextAuthProvider session={pageProps.session}>
+        <ChakraProvider theme={theme}>
+          <SpotifyDataProvider>
+            <Component {...pageProps} />
+          </SpotifyDataProvider>
+        </ChakraProvider>
+      </NextAuthProvider>
+    </>
   );
 }
 
