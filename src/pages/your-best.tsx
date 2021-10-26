@@ -1,8 +1,16 @@
-import { Button, Flex, Avatar, Text, HStack, Box } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Avatar,
+  Text,
+  HStack,
+  Box,
+  Link,
+} from '@chakra-ui/react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession, signOut, useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
-import { FaSpotify } from 'react-icons/fa';
+import { FaShareAlt, FaSpotify, FaTwitter } from 'react-icons/fa';
 import { Logo } from '../components/Logo';
 import { TimeRangeButton } from '../components/TimeRangeButton';
 import { Waves } from '../components/Waves';
@@ -15,12 +23,6 @@ import { Tilt } from '../components/YourBest/Tilt';
 export default function yourBest() {
   const { timeRange, setTimeRange } = useSpotifyData();
 
-  const tiltOptions = {
-    reverse: true,
-    speed: 1000,
-    max: 5,
-  };
-
   const [session] = useSession();
   const spotifySession = session as SpotifySession;
 
@@ -32,6 +34,12 @@ export default function yourBest() {
     year: 'numeric',
   });
 
+  const tiltOptions = {
+    reverse: true,
+    speed: 1000,
+    max: 5,
+  };
+
   function handleSignOut() {
     signOut();
     router.push('/');
@@ -39,6 +47,16 @@ export default function yourBest() {
 
   function handleTimeRangeChange(timeRange: string) {
     setTimeRange(timeRange);
+  }
+
+  function handleShare() {
+    if (navigator.share) {
+      navigator.share({
+        url: 'https://shareyourbest.vercel.app/',
+        title: 'share your best!',
+        text: 'Login in with Spotify and share your most listened artists, albums and playlists!',
+      });
+    }
   }
 
   function convertTimeRangeToReadableSentence(timeRange: string) {
@@ -133,19 +151,56 @@ export default function yourBest() {
           </Text>
         </Tilt>
 
-        {session && (
-          <Box align="center">
+        <Text fontWeight="bold" fontSize="2rem" mt="2rem">
+          Share now with your friends and family!
+        </Text>
+
+        <HStack spacing={2} display="flex" justifyContent="center" mt="1rem">
+          <Link
+            isExternal
+            href="https://twitter.com/intent/tweet?hashtags=shareyourbest&original_referer=https%3A%2F%2Fpublish.twitter.com%2F&ref_src=twsrc%5Etfw%7Ctwcamp%5Ebuttonembed%7Ctwterm%5Eshare%7Ctwgr%5E&text=I%20have%20good%20taste%20in%20music%20and%20you%3F%20Share%20your%20best%20in&url=https%3A%2F%2Fshareyourbest.vercel.app%2F"
+          >
+            <Button
+              colorScheme="twitter"
+              leftIcon={<FaTwitter />}
+              w="fit-content"
+            >
+              Tweet
+            </Button>
+          </Link>
+
+          <Button
+            colorScheme="blue"
+            leftIcon={<FaShareAlt />}
+            w="fit-content"
+            onClick={() => handleShare()}
+          >
+            Share
+          </Button>
+
+          {session && (
             <Button
               colorScheme="green"
               leftIcon={<FaSpotify />}
               w="fit-content"
-              my="2rem"
               onClick={() => handleSignOut()}
             >
               Log out
             </Button>
-          </Box>
-        )}
+          )}
+        </HStack>
+
+        <Text my="3rem">
+          Made by{' '}
+          <Link
+            href="https://github.com/rodrigoeduardo"
+            isExternal
+            color="green.600"
+          >
+            Rodrigo Eduardo
+          </Link>{' '}
+          🎈
+        </Text>
       </Box>
     </>
   );
