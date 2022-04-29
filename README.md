@@ -6,6 +6,10 @@
 
 share your best! is an application built by [me](https://github.com/rodrigoeduardo/) which aims to authenticate an user and get their most listened songs, artists and playlists from Spotify! Then, it'll be able to share good taste in music on Instagram, Twitter, Facebook and other social networks!
 
+## 🚫 Disclaimer
+
+The application hosted on Vercel https://shareyourbest.vercel.app does not work with all Spotify accounts due to Spotify API restrictions. To use the app properly, read "How to run" section below.
+
 ## 🚀 Built With
 
 - [Nextjs](https://nextjs.org/)
